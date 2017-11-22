@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-config
+  namespace: default
+data:
+  ASPNETCORE_URLS: http://*:80
+  ServiceUrl: http://conference-back:56009/

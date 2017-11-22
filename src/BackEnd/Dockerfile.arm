@@ -1,0 +1,15 @@
+FROM microsoft/aspnetcore-build:2.0 as build
+ARG csproj=./src/BackEnd/BackEnd.csproj
+WORKDIR /source
+COPY ./src/ConferenceDTO/ConferenceDTO.csproj ./src/ConferenceDTO/ConferenceDTO.csproj
+COPY $csproj $csproj
+RUN dotnet restore $csproj -r linux-arm
+COPY . .
+RUN dotnet publish -c Release -o /app ./src/BackEnd/BackEnd.csproj -r linux-arm --no-restore
+
+FROM microsoft/dotnet:2.0-runtime-stretch-arm32v7
+WORKDIR /app
+ENV ASPNETCORE_URLS=http://*:56009
+EXPOSE 56009
+COPY --from=build /app .
+ENTRYPOINT ["dotnet", "BackEnd.dll"]

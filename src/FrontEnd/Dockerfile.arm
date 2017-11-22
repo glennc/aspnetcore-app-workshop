@@ -1,0 +1,14 @@
+FROM microsoft/aspnetcore-build:2.0 as build
+WORKDIR /source
+COPY ./src/ConferenceDTO/ConferenceDTO.csproj ./src/ConferenceDTO/ConferenceDTO.csproj
+COPY ./src/FrontEnd/FrontEnd.csproj ./src/FrontEnd/FrontEnd.csproj
+RUN dotnet restore ./src/FrontEnd/FrontEnd.csproj -r linux-arm
+COPY . .
+RUN dotnet publish -c Release -o /app ./src/FrontEnd/FrontEnd.csproj -r linux-arm --no-restore
+
+FROM microsoft/dotnet:2.0-runtime-stretch-arm32v7
+WORKDIR /app
+ENV ASPNETCORE_URLS=http://*:80
+EXPOSE 80
+COPY --from=build /app .
+ENTRYPOINT ["dotnet", "FrontEnd.dll"]

@@ -1,0 +1,24 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: cplanner-frontend
+  labels:
+    app: cplanner-front
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: cplanner-frontend
+  template:
+    metadata:
+      labels:
+        app: cplanner-frontend
+    spec:
+      containers:
+      - name: cplanner-frontend
+        image: glennc/conferenceplanner:frontend
+        ports:
+        - containerPort: 80
+        envFrom:
+        - configMapRef:
+            name: frontend-config

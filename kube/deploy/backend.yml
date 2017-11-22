@@ -1,0 +1,32 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: conference-back
+  labels:
+    app: conference-back
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: conference-back
+  template:
+    metadata:
+      labels:
+        app: conference-back
+    spec:
+      containers:
+      - name: conference-back
+        image: glennc/conferenceplanner:backendv2
+        ports:
+        - containerPort: 56009
+        envFrom:
+        - configMapRef:
+            name: "backend"
+        volumeMounts:
+          - name: pass
+            mountPath: "/secrets/"
+            readOnly: true
+      volumes:
+        - name: pass
+          secret:
+            secretName: postgres-pass

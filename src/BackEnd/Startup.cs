@@ -12,6 +12,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using BackEnd.Data;
 using Swashbuckle.AspNetCore.Swagger;
+using Npgsql;
+using System.IO;
 
 namespace BackEnd
 {
@@ -34,7 +36,16 @@ namespace BackEnd
                 }
                 else
                 {
-                    options.UseSqlite("Data Source=conferences.db");
+                    //options.UseSqlite("Data Source=conferences.db");
+                    var builder = new NpgsqlConnectionStringBuilder();
+                    builder.Database = Configuration["DATABASE:NAME"];
+                    builder.Host = Configuration["DATABASE:HOST"];
+                    //TODO: If we ship the `file-per-value config` provider this could be made to 
+                    //work like the others.
+                    builder.Password = Configuration["DATABASE:PASSWORD"] ?? File.ReadAllText(Configuration["DATABASE:PASSWORDFILE"]);
+                    builder.Port = int.Parse(Configuration["DATABASE:PORT"]);
+                    builder.Username = Configuration["DATABASE:USER"];
+                    options.UseNpgsql(builder.ToString());
                 }
             });
 

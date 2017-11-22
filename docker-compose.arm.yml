@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: ./src/FrontEnd/Dockerfile.arm
+
+  backend:
+    build:
+      context: .
+      dockerfile: ./src/BackEnd/Dockerfile.arm

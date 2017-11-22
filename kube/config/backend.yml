@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend
+  namespace: default
+data:
+  DATABASE__NAME: conference
+  DATABASE__HOST: db
+  DATABASE__PASSWORDFILE: /secrets/postgres-pass
+  DATABASE__PORT: "5432"
+  DATABASE__USER: postgres

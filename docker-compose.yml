@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  frontend:
+    image: frontend
+    links: [ backend ]
+    environment:
+      - ServiceUrl=http://backend:56009/
+    build:
+      context: .
+      dockerfile: ./src/FrontEnd/Dockerfile
+
+  backend:
+    image: backend
+    links: [db]
+    build:
+      context: .
+      dockerfile: ./src/BackEnd/Dockerfile
+    environment:
+      - DATABASE__NAME=conference
+      - DATABASE__HOST=db
+      - DATABASE__PASSWORD=myPassword
+      - DATABASE__PORT=5432
+      - DATABASE__USER=postgres
+
+  db:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=myPassword
+      - POSTGRES_DB=conference
